@@ -6,6 +6,8 @@ import com.sanatorium.sanatorium.repo.UserRepo;
 import com.sanatorium.sanatorium.repo.VisitRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Transactional
@@ -34,14 +37,18 @@ public class VisitController {
      * @return obiekt ModelAndView z odpowiedzią
      */
     @RequestMapping("/addVisit")
-    public ModelAndView addVisit(HttpServletRequest req) {
+    public ModelAndView addVisit(HttpServletRequest req, Authentication authentication) {
 
         ModelAndView mav = new ModelAndView();
 
-        try {
-            String currUser = (String) req.getSession(false).getAttribute("user");
+        String email = "";
 
-            User user = userRepo.findUserByEmail(currUser);
+        try {
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            Map attributes = oidcUser.getAttributes();
+            email = (String) attributes.get("email");
+
+            User user = userRepo.findUserByEmail(email);
 
             List<User> doctors = null;
             if (user.getPermission().getName().equals("doctor")) {
@@ -75,7 +82,7 @@ public class VisitController {
      * @return obiekt ModelAndView z odpowiedzią
      */
     @PostMapping("/saveVisit")
-    public ModelAndView saveVisit(HttpServletRequest req) {
+    public ModelAndView saveVisit(HttpServletRequest req, Authentication authentication) {
         ModelAndView mav = new ModelAndView();
         String referer = req.getHeader("Referer");
 
@@ -93,9 +100,11 @@ public class VisitController {
             visit.setActive(true);
             visitRepo.save(visit);
 
-            String currUser = (String) req.getSession(false).getAttribute("user");
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            Map attributes = oidcUser.getAttributes();
+            String email = (String) attributes.get("email");
 
-            User user = userRepo.findUserByEmail(currUser);
+            User user = userRepo.findUserByEmail(email);
             if (user.getPermission().getName().equals("doctor")) {
                 return new ModelAndView("redirect:/", "message", "Wizyta dodana pomyślnie.");
             }
@@ -167,7 +176,7 @@ public class VisitController {
      * @return obiekt ModelAndView z odpowiedzią
      */
     @PostMapping("/editVisit/{id}")
-    public ModelAndView updateVisit(@PathVariable("id") Long id, HttpServletRequest req){
+    public ModelAndView updateVisit(@PathVariable("id") Long id, HttpServletRequest req, Authentication authentication){
         ModelAndView mav = new ModelAndView();
         String referer = req.getHeader("Referer");
 
@@ -185,9 +194,12 @@ public class VisitController {
             visit.setDateTime(date);
             visitRepo.save(visit);
 
-                String currUser = (String) req.getSession(false).getAttribute("user");
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            Map attributes = oidcUser.getAttributes();
+            String email = (String) attributes.get("email");
 
-                User user = userRepo.findUserByEmail(currUser);
+
+                User user = userRepo.findUserByEmail(email);
                 if (user.getPermission().getName().equals("doctor")) {
                     return new ModelAndView("redirect:/", "message", "Wizyta zaktualizowana pomyślnie.");
                 }

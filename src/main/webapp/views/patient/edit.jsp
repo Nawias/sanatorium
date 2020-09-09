@@ -29,7 +29,7 @@
         <div class="col-md-4   align-items-center ">
         <h3>Edytuj pacjenta</h3>
 
-            <form action="/editDoctor/${patient.getId()}" method="post">
+            <form action="/editPatient/${patient.getId()}" method="post">
 
 
                 <div class="form-group">
