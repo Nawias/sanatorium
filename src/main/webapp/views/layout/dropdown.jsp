@@ -12,7 +12,7 @@
 
 
         <%--<a class="dropdown-item" href="#">Link 1</a>--%>
-        <a class="dropdown-item" href="/user/configuration/${sessionScope.user}">Ustawienia konta</a>
+        <a class="dropdown-item" href="/user/configuration/">Ustawienia konta</a>
         <a class="dropdown-item" href="/logout">Wyloguj</a>
         </div>
         </div>

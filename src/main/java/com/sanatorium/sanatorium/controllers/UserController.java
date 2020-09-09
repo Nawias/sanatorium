@@ -6,6 +6,8 @@ import com.sanatorium.sanatorium.repo.PermissionRepo;
 import com.sanatorium.sanatorium.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Controller
@@ -171,15 +174,19 @@ public class UserController {
 
     /**
      * Metoda wyświetlająca widok z ustawieniami użytkownika
-     * @param login  login użytkownika w bazie
      * @param req    zapytanie http
      * @return obiekt ModelAndView z odpowiedzią
      */
-    @RequestMapping("/user/configuration/{login}")
-    public ModelAndView accountConfig(@PathVariable("login") String login, HttpServletRequest req) {
-        User user = repo.findUserByEmail(login);
+    @RequestMapping("/user/configuration/")
+    public ModelAndView accountConfig(HttpServletRequest req, Authentication authentication) {
+        String email = "";
+        try {
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            Map attributes = oidcUser.getAttributes();
+            email = (String) attributes.get("email");
+        }catch(Exception e){}
+        User user = repo.findUserByEmail(email);
         ModelAndView mav = new ModelAndView();
-
         if (user != null) {
             mav.addObject(user);
             mav.setViewName("users/config");

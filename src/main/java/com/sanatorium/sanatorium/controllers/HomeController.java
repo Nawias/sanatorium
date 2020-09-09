@@ -28,13 +28,15 @@ public class HomeController {
     @RequestMapping("/")
     public ModelAndView homePage(HttpServletRequest req, Authentication authentication){
         ModelAndView mav = new ModelAndView();
-
-        DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-        Map attributes = oidcUser.getAttributes();
-
+        String email = "";
+        try {
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            Map attributes = oidcUser.getAttributes();
+            email = (String) attributes.get("email");
+        }catch(Exception e){}
         if (req.getSession().getAttribute("user") != "" ){
             updateHelper.refreshTurnuses();
-            return permissionResolver.selectHome((String) attributes.get("email"));
+            return permissionResolver.selectHome(email );
         }else {
             req.getSession().setAttribute("user","");
         }

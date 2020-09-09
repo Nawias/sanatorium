@@ -52,12 +52,11 @@
             <i class="fas fa-user-circle h1 fa-10x m-3"></i>
             <h3 class="my-2">${user.getName()} ${user.getSurname()}  </h3>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action"><a href="/user/edit/password/${user.getId()}"
-                                                                      class="link100">Zmień hasło</a></li>
-            <%--    <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
+                <li class="list-group-item list-group-item-action">Lorem ipsum dorol sit amet</li>
+                <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
                 <li class="list-group-item list-group-item-action">Morbi leo risus</li>
                 <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
-                <li class="list-group-item list-group-item-action">Vestibulum at eros</li>--%>
+                <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
             </ul>
 
 
