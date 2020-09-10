@@ -5,6 +5,7 @@ import com.sanatorium.sanatorium.helpers.UpdateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,10 +31,10 @@ public class HomeController {
         ModelAndView mav = new ModelAndView();
         String email = "";
         try {
-            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-            Map attributes = oidcUser.getAttributes();
+            DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+            Map attributes = oAuth2User.getAttributes();
             email = (String) attributes.get("email");
-        }catch(Exception e){}
+        }catch(Exception e){e.printStackTrace();}
         if (req.getSession().getAttribute("user") != "" ){
             updateHelper.refreshTurnuses();
             return permissionResolver.selectHome(email );

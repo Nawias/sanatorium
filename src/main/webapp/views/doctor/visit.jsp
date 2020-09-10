@@ -157,7 +157,7 @@
                     <div class="col-md-4 p-4 d-none medic">
                         <div class="form-group ">
                             <h2>Wybierz leki</h2>
-                            <select name="medicamment" class="form-control select2 " style="width: 100%;">
+                            <select name="medicament" class="form-control select2 " style="width: 100%;">
                                 <option disabled selected value class="hide"></option>
                                 <c:forEach items="${medicaments}" var="medicament">
                                     <option value="<c:out value="${medicament.getId()}"/>">

@@ -27,6 +27,9 @@ public class Visit {
     @Column(nullable = true)
     public boolean active;
 
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Nullable
+    private PatientCard patientCard;
 
     @OneToOne
     private User patient;

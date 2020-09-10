@@ -83,7 +83,7 @@ public class DoctorController {
             User doctor = new User();
             doctor.setPassword("zaq1@WSX");
             doctor.setPermission(permRepo.findPermissionByName("doctor"));
-            doctor.setEmail(req.getParameter("login"));
+            doctor.setEmail(req.getParameter("email"));
             doctor.setName(req.getParameter("name"));
             doctor.setSurname(req.getParameter("surname"));
             userRepo.save(doctor);
@@ -161,76 +161,5 @@ public class DoctorController {
     }
 
 
-
-    @RequestMapping("/startVisit/{id}")
-    public ModelAndView deleteDoctor(@PathVariable("id") Long id,HttpServletRequest req){
-        ModelAndView mav = new ModelAndView();
-
-        Visit visit = visitRepo.findVisitById(id);
-
-        if (visit != null) {
-            List<PatientCard> cards = patientCardRepo.findPatientCardsByPatientOrderByIdDesc(visit.getPatient());
-            List<Medicament> medicaments = medRepo.findAll(Sort.by(Sort.Direction.ASC, "name"));
-
-            mav.addObject("visit", visit);
-            mav.addObject("cards", cards);
-            mav.addObject("medicaments", medicaments);
-            mav.setViewName("doctor/visit");
-
-            return mav;
-        }
-        return mav;
-    }
-
-
-    @PostMapping("/endVisit/{id}")
-    public ModelAndView endVisit(@PathVariable("id") Long id, HttpServletRequest req){
-        String referer = req.getHeader("Referer");
-       try{
-        ModelAndView mav = new ModelAndView();
-        Visit visit = visitRepo.findVisitById(id);
-
-        String medbox = (req.getParameter("prescription"));
-        String refbox = (req.getParameter("referal"));
-
-        if (visit != null){
-            PatientCard patientCard = new PatientCard();
-            patientCard.setVisit(visit);
-            patientCard.setPatient(visit.getPatient());
-            patientCard.setDescription(req.getParameter("description"));
-
-            if (medbox != null){
-                Prescription prescription = new Prescription();
-                prescription.setVisit(visit);
-                prescription.setMedicament(medRepo.findMedicamentsById(Long.parseLong(req.getParameter("medicamment"))));
-                prescriptionRepo.save(prescription);
-                patientCard.setPrescription(prescription);
-            }
-
-            if (refbox != null){
-                Referral referral = new Referral();
-                referral.setDate(new Date());
-                referral.setDoctor(visit.getPatient());
-                referral.setPatient(visit.getPatient());
-                referral.setService(req.getParameter("referal_service"));
-                referral.setDecription(req.getParameter("referal_description"));
-                referalRepo.save(referral);
-                patientCard.setReferral(referral);
-            }
-
-            patientCardRepo.save(patientCard);
-            visit.setActive(false);
-            visitRepo.save(visit);
-            return new ModelAndView("redirect:/", "message", "Wizyta zakończona.");
-
-        }else{
-            return new ModelAndView("redirect:" + referer, "error", "Błąd podczas zapisu wizyty!");
-        }
-
-        }catch (Exception e){
-           return new ModelAndView("redirect:" + referer, "error", "Błąd podczas zapisu wizyty!");
-
-       }
-    }
 
 }

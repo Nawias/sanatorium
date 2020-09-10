@@ -7,7 +7,7 @@ import com.sanatorium.sanatorium.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -181,7 +181,7 @@ public class UserController {
     public ModelAndView accountConfig(HttpServletRequest req, Authentication authentication) {
         String email = "";
         try {
-            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            DefaultOAuth2User oidcUser = (DefaultOAuth2User) authentication.getPrincipal();
             Map attributes = oidcUser.getAttributes();
             email = (String) attributes.get("email");
         }catch(Exception e){}
