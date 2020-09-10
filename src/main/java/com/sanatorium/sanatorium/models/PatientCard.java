@@ -20,13 +20,13 @@ public class PatientCard {
     @OneToOne
     private Visit visit;
 
-    @OneToOne @Nullable
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true) @Nullable
     private Prescription prescription;
 
     @OneToOne
     private User patient;
 
-    @OneToOne @Nullable
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true) @Nullable
     private Referral referral;
 
     public Long getId() {

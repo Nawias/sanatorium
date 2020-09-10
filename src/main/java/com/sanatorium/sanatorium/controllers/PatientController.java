@@ -77,7 +77,7 @@ public class PatientController {
             User patient = new User();
             patient.setPassword("zaq1@WSX");
             patient.setPermission(permRepo.findPermissionByName("patient"));
-            patient.setEmail(req.getParameter("login"));
+            patient.setEmail(req.getParameter("email"));
             patient.setName(req.getParameter("name"));
             patient.setSurname(req.getParameter("surname"));
             userRepo.save(patient);

@@ -108,11 +108,12 @@ public class RoomController {
     public ModelAndView deleteRoom(@PathVariable("id") Long id, HttpServletRequest req) {
 
         try {
-            Long roomid = new Long(id);
-            roomRepo.removeRoomById(roomid);
+            Room room = roomRepo.findRoomById(id);
+            roomRepo.delete(room);
             return new ModelAndView("redirect:/showRooms", "message", "Pokój usunięty pomyślnie.");
 
         } catch (Exception e) {
+            e.printStackTrace();
             return new ModelAndView("redirect:/showRooms", "error", "Błąd podczas usuwania pokoju!");
 
         }

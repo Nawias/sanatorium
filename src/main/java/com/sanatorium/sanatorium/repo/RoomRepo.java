@@ -9,10 +9,9 @@ public interface RoomRepo extends JpaRepository<Room, Integer> {
 
     Room findRoomById(Long id);
 
-    Room removeRoomById(Long id);
-
     Room findFirstByFloorIsGreaterThanOrderByFloorDesc(int floor);
 
     List<Room> findRoomsByStateOrderByIdAsc(String state);
 
+    Room findRoomByFloorAndNumber(int floor, int number);
 }

@@ -16,7 +16,7 @@ public class Prescription {
     @Column(name = "id")
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     private List<Medicament> medicament;
 
     @OneToOne
