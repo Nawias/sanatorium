@@ -167,17 +167,17 @@ public class TurnusesController {
                 patient.setPermission(permRepo.findPermissionByName("patient"));
                 patient.setPassword("zaq1@WSX");
 
-                String login = req.getParameter("name").substring(0, 1) + "." + req.getParameter("surname");
-                login = login.toLowerCase();
-                if (userRepo.findUserByEmail(login) == null) {
-                    patient.setEmail(login);
+                String email = req.getParameter("name").substring(0, 1) + "." + req.getParameter("surname")+"@gmail.com";
+                email = email.toLowerCase();
+                if (userRepo.findUserByEmail(email) == null) {
+                    patient.setEmail(email);
                 } else {
                     int i = 2;
-                    String baseLogin = new String(login);
+                    String baseLogin = new String(email);
                     while (true) {
-                        login = baseLogin + String.valueOf(i);
-                        if (userRepo.findUserByEmail(login) == null) {
-                            patient.setEmail(login);
+                        email = baseLogin + String.valueOf(i);
+                        if (userRepo.findUserByEmail(email) == null) {
+                            patient.setEmail(email);
                             break;
                         }
 

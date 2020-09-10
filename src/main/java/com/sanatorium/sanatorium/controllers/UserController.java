@@ -75,7 +75,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView();
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
-        String login = req.getParameter("login");
+        String login = req.getParameter("email");
         int permId = Integer.parseInt(req.getParameter("role"));
         Permission permission = permRepo.findPermissionById(permId);
 
@@ -166,6 +166,7 @@ public class UserController {
                 return new ModelAndView("redirect:/showUsers", "message", "Dane zaktualizowane pomyślnie");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return new ModelAndView("redirect:/showUsers", "error", "Wystąpił błąd podczas aktualizacji danych");
         }
 
@@ -196,88 +197,7 @@ public class UserController {
         return new ModelAndView("redirect:/");
 
     }
-    /**
-     * Metoda wyświetlająca formularz edycji hasła użytkownika
-     * @param id  identyfikator użytkownika w bazie
-     * @return obiekt ModelAndView z odpowiedzią
-     */
-    @RequestMapping("/user/edit/password/{id}")
-    public ModelAndView changePasswordForm(@PathVariable("id") Long id, HttpServletRequest req) {
-        User user = repo.findUserById(id);
-        ModelAndView mav = new ModelAndView();
 
-        if (user != null) {
-            mav.addObject(user);
-            mav.setViewName("users/password");
-            return mav;
-        }
-
-                return new ModelAndView("redirect:/");
-
-    }
-    /**
-     * Metoda obsługująca żądanie resetowania hasła użytkownika
-     * @param id  identyfikator użytkownika w bazie
-     * @param req zapytanie HTTP
-     * @return obiekt ModelAndView z odpowiedzią
-     */
-    @RequestMapping("/resetPassword/{id}")
-    public ModelAndView resetPassword(@PathVariable("id") Long id, HttpServletRequest req) {
-        User user = repo.findUserById(id);
-        ModelAndView mav = new ModelAndView();
-
-        if (user != null) {
-            user.setPassword("zaq1@WSX");
-            repo.save(user);
-
-            return new ModelAndView("redirect:/showUsers", "message", "Hasło zresetowane pomyślnie");
-
-        }
-
-                return new ModelAndView("redirect:/");
-
-    }
-
-    /**
-     * Metoda obsługująca żądanie zmiany hasła użytkownika
-     * @param id  identyfikator użytkownika w bazie
-     * @param req zapytanie HTTP
-     * @return obiekt ModelAndView z odpowiedzią
-     */
-    @PostMapping("/user/edit/password/{id}")
-    public ModelAndView changePassword(@PathVariable("id") Long id, HttpServletRequest req) {
-        User user = repo.findUserById(id);
-        ModelAndView mav = new ModelAndView();
-
-        String password = req.getParameter("current");
-        String newPassword = req.getParameter("new");
-        String confirm = req.getParameter("confirm");
-
-        if (user != null) {
-
-            if(password.equals(user.getPassword())){
-                if (newPassword.equals(confirm)){
-                    user.setPassword(newPassword);
-                    repo.save(user);
-
-                    mav.addObject(user);
-                    mav.addObject("message", "Hasło zostało zmienione.");
-                    mav.setViewName("users/config");
-                    return mav;
-                }else{
-                    String referer = req.getHeader("Referer");
-                    return new ModelAndView("redirect:"+referer, "error", "Podane hasła nie są zgodne!");
-                }
-            }
-
-            String referer = req.getHeader("Referer");
-            return new ModelAndView("redirect:"+referer, "error", "Stare hasło niepoprawne!");
-
-        }
-
-                return new ModelAndView("redirect:/");
-
-    }
 
 
 }

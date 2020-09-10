@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Date;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -102,6 +104,15 @@ public class DoctorControllerTest {
                 .andExpect(status().is(302));
     }
 
+    @Test
+    void shouldDeleteDoctor() throws Exception {
+
+        OAuth2User principal = OAuth2Util.createOAuth2User("Wallace Breen","dadmin@gmail.com");
+        mockMvc.perform(get("/deleteDoctor/"+userRepo.findUserByEmail("ddoctor@gmail.com").getId().toString()).with(authentication(OAuth2Util.getOauthAuthenticationFor(principal)))).andDo(print()).andExpect(status().is(302));
+        User doctor = new User(); doctor.setPermission(permissionRepo.findPermissionByName("doctor")); doctor.setEmail("ddoctor@gmail.com"); doctor.setName("Jan"); doctor.setSurname("Lekarz");
+        userRepo.save(doctor);
+    }
+    
     @AfterAll()
     void destroyUsers(){
         userRepo.delete(userRepo.findUserByEmail("dpatient@gmail.com"));
